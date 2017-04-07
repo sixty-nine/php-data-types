@@ -4,4 +4,16 @@
             <directory>../src/*/*/Tests</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../src</directory>
+            <exclude>
+                <directory suffix=".php">../src/*/*/Tests</directory>
+                <directory suffix=".php">../vendor</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+    <logging>
+      <log type="coverage-html" target="./coverage" lowUpperBound="35" highLowerBound="70"/>
+    </logging>
 </phpunit>
