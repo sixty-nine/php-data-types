@@ -1,0 +1,4 @@
+vendor/
+bin/*
+tests/coverage/*
+composer.lock

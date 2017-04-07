@@ -1,0 +1,29 @@
+{
+    "name": "sixty-nine/php-data-types",
+    "description": "Advanced data types for PHP",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniele Barsotti",
+            "email": "github@sixty-nine.ch"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "SixtyNine\\DataTypes\\": "src/SixtyNine/DataTypes"
+        }
+    },
+    "require": {
+        "php": ">=5.3.9",
+        "jms/serializer": "^1.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8",
+        "webmozart/assert": "^1.2"
+    },
+    "config": {
+        "bin-dir": "bin"
+    }
+}
