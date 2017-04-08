@@ -102,15 +102,26 @@ class Box
      * Detect box collision
      * This algorithm only works with Axis-Aligned boxes!
      * @param Box $box The other rectangle to test collision with
+     * @param bool $strict If true, boxes "touching" each other are not intersecting, otherwise they are
      * @return boolean True is the boxes collide, false otherwise
      */
-    public function intersects(Box $box)
+    public function intersects(Box $box, $strict = true)
     {
-        return ($this->getLeft() < $box->getRight()
-            && $this->getRight() > $box->getLeft()
-            && $this->getTop() < $box->getBottom()
-            && $this->getBottom() > $box->getTop()
-        );
+        $comparator = function ($x, $y) {
+            return $x < $y;
+        };
+
+        if (!$strict) {
+            $comparator = function ($x, $y) {
+                return $x <= $y;
+            };
+        }
+
+        return $comparator($this->getLeft(), $box->getRight())
+            && $comparator($box->getLeft(), $this->getRight())
+            && $comparator($this->getTop(), $box->getBottom())
+            && $comparator($box->getTop(), $this->getBottom())
+        ;
     }
 
     /**

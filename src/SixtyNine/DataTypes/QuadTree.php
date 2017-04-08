@@ -143,15 +143,25 @@ class QuadTree
     public function retrieve(Box $box)
     {
         $return = array();
-        $index = $this->getIndex($box);
 
-        if ($index !== -1 && $this->isSplit) {
-            /** @var QuadTree $node */
-            $node = $this->nodes[$index];
-            $return = array_merge($return, $node->retrieve($box));
+        if (!$this->bounds->intersects($box, false)) {
+            return array();
         }
 
-        $return = array_merge($return, $this->objects->toArray());
+        /** @var Box $object */
+        foreach ($this->objects as $object) {
+            if ($object->intersects($box, false)) {
+                $return[] = $object;
+            }
+        }
+
+        if ($this->isSplit) {
+            /** @var QuadTree $node */
+            foreach ($this->nodes as $node) {
+                $return = array_merge($return, $node->retrieve($box));
+            }
+        }
+
         return $return;
     }
 
@@ -188,11 +198,10 @@ class QuadTree
      */
     public function __toString()
     {
-        $padding = str_repeat('  ', $this->level);
+        $padding = str_repeat('> ', $this->level);
         $res = sprintf(
-            '%sQuadTree, level: %s, bounds: %s, objects: %s',
+            '%sBounds: %s, objects: %s',
             $padding,
-            $this->level,
             $this->bounds,
             $this->objects->count()
         );
@@ -207,7 +216,7 @@ class QuadTree
             }
         }
 
-        return $res . PHP_EOL;
+        return $res;
     }
 
     /**

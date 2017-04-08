@@ -112,6 +112,16 @@ class QuadTreeTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testRetrieve1()
+    {
+        $count = 1000;
+        $bounds = new Box(0, 0, 100, 100);
+        $tree = new QuadTree($bounds);
+        $this->fillTreeWithRandomBoxes($tree, $count);
+        $this->assertEquals($count, count($tree->retrieve($bounds)));
+        $this->assertEquals($tree->getAllObjects(), $tree->retrieve($bounds));
+    }
+
     public function testCollides()
     {
         $bounds = new Box(0, 0, 80, 80);
