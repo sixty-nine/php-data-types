@@ -6,6 +6,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class QuadTree
 {
+    const Q_TOP_LEFT = 0;
+    const Q_TOP_RIGHT = 1;
+    const Q_BOTTOM_LEFT = 2;
+    const Q_BOTTOM_RIGHT = 3;
+
     /** @var int */
     protected $level;
     /** @var int */
@@ -47,10 +52,10 @@ class QuadTree
         $y = $this->bounds->getY();
 
         $this->nodes = array();
-        $this->nodes[0] = new Quadtree(new Box($x, $y, $subWidth, $subHeight), $this->level + 1, $this->maxObjects, $this->maxLevels);
-        $this->nodes[1] = new Quadtree(new Box($x + $subWidth, $y, $subWidth, $subHeight), $this->level + 1, $this->maxObjects, $this->maxLevels);
-        $this->nodes[2] = new Quadtree(new Box($x, $y + $subHeight, $subWidth, $subHeight), $this->level + 1, $this->maxObjects, $this->maxLevels);
-        $this->nodes[3] = new Quadtree(new Box($x + $subWidth, $y + $subHeight, $subWidth, $subHeight), $this->level + 1, $this->maxObjects, $this->maxLevels);
+        $this->nodes[self::Q_TOP_LEFT] = new Quadtree(new Box($x, $y, $subWidth, $subHeight), $this->level + 1, $this->maxObjects, $this->maxLevels);
+        $this->nodes[self::Q_TOP_RIGHT] = new Quadtree(new Box($x + $subWidth, $y, $subWidth, $subHeight), $this->level + 1, $this->maxObjects, $this->maxLevels);
+        $this->nodes[self::Q_BOTTOM_LEFT] = new Quadtree(new Box($x, $y + $subHeight, $subWidth, $subHeight), $this->level + 1, $this->maxObjects, $this->maxLevels);
+        $this->nodes[self::Q_BOTTOM_RIGHT] = new Quadtree(new Box($x + $subWidth, $y + $subHeight, $subWidth, $subHeight), $this->level + 1, $this->maxObjects, $this->maxLevels);
     }
 
     /**
@@ -68,18 +73,15 @@ class QuadTree
         $leftQuadrant = $box->getX() <= $vMidpoint && $box->getX() + $box->getWidth() <= $vMidpoint;
         $rightQuadrant = $box->getX() >= $vMidpoint;
 
-        if ($leftQuadrant) {
-            if ($topQuadrant) {
-                return 0;
-            } else if ($bottomQuadrant) {
-                return 2;
-            }
-        } else if ($rightQuadrant) {
-            if ($topQuadrant) {
-                return 1;
-            } else if ($bottomQuadrant) {
-                return 3;
-            }
+        switch (true) {
+            case $leftQuadrant && $topQuadrant:
+                return self::Q_TOP_LEFT;
+            case $rightQuadrant && $topQuadrant:
+                return self::Q_TOP_RIGHT;
+            case $leftQuadrant && $bottomQuadrant:
+                return self::Q_BOTTOM_LEFT;
+            case $rightQuadrant && $bottomQuadrant:
+                return self::Q_BOTTOM_RIGHT;
         }
 
         return -1;
