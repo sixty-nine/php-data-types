@@ -60,18 +60,54 @@ class QuadTree
 
     /**
      * @param Box $box
+     * @return bool
+     */
+    protected function isInTopQuadrant(Box $box)
+    {
+        $hMidpoint = $this->bounds->getCenter()->getY();
+        return $box->getY() <= $hMidpoint && $box->getY() + $box->getHeight() <= $hMidpoint;
+    }
+
+    /**
+     * @param Box $box
+     * @return bool
+     */
+    protected function isInBottomQuadrant(Box $box)
+    {
+        $hMidpoint = $this->bounds->getCenter()->getY();
+        return $box->getY() >= $hMidpoint;
+    }
+
+    /**
+     * @param Box $box
+     * @return bool
+     */
+    protected function isInLeftQuadrant(Box $box)
+    {
+        $vMidpoint = $this->bounds->getCenter()->getX();
+        return $box->getX() <= $vMidpoint && $box->getX() + $box->getWidth() <= $vMidpoint;
+    }
+
+    /**
+     * @param Box $box
+     * @return bool
+     */
+    protected function isInRightQuadrant(Box $box)
+    {
+        $vMidpoint = $this->bounds->getCenter()->getX();
+        return $box->getX() >= $vMidpoint;
+    }
+
+    /**
+     * @param Box $box
      * @return int
      */
     public function getIndex(Box $box)
     {
-        $center = $this->bounds->getCenter();
-        $vMidpoint = $center->getX();
-        $hMidpoint = $center->getY();
-
-        $topQuadrant = ($box->getY() <= $hMidpoint && $box->getY() + $box->getHeight() <= $hMidpoint);
-        $bottomQuadrant = ($box->getY() >= $hMidpoint);
-        $leftQuadrant = $box->getX() <= $vMidpoint && $box->getX() + $box->getWidth() <= $vMidpoint;
-        $rightQuadrant = $box->getX() >= $vMidpoint;
+        $topQuadrant = $this->isInTopQuadrant($box);
+        $bottomQuadrant = $this->isInBottomQuadrant($box);
+        $leftQuadrant = $this->isInLeftQuadrant($box);
+        $rightQuadrant = $this->isInRightQuadrant($box);
 
         switch (true) {
             case $leftQuadrant && $topQuadrant:

@@ -2,19 +2,15 @@
 
 namespace SixtyNine\DataTypes;
 
-use JMS\Serializer\Annotation as JMS;
-
 class Vector
 {
     /**
      * @var float
-     * @JMS\Type("float")
      */
     protected $x;
 
     /**
      * @var float
-     * @JMS\Type("float")
      */
     protected $y;
 
@@ -35,7 +31,7 @@ class Vector
      * @param float $y
      * @return Vector
      */
-    public static function create($x = 0.0, $y = 0.0)
+    public static function create($x = 0.0, $y = 0.0) : Vector
     {
         return new self($x, $y);
     }
@@ -45,7 +41,7 @@ class Vector
      * @param float $x
      * @return Vector
      */
-    public function setX($x)
+    public function setX($x) : Vector
     {
         $this->x = $x;
         return $this;
@@ -55,7 +51,7 @@ class Vector
      * Get X coordinate.
      * @return float
      */
-    public function getX()
+    public function getX() : float
     {
         return $this->x;
     }
@@ -65,7 +61,7 @@ class Vector
      * @param float $y
      * @return Vector
      */
-    public function setY($y)
+    public function setY($y) : Vector
     {
         $this->y = $y;
         return $this;
@@ -75,7 +71,7 @@ class Vector
      * Get Y coordinate.
      * @return float
      */
-    public function getY()
+    public function getY() : float
     {
         return $this->y;
     }
@@ -84,7 +80,7 @@ class Vector
      * Length of vector (magnitude)
      * @return float
      */
-    public function length()
+    public function length() : float
     {
         return sqrt($this->x * $this->x + $this->y * $this->y);
     }
@@ -95,7 +91,7 @@ class Vector
      * @param float $deltaY
      * @return Vector
      */
-    public function move($deltaX, $deltaY)
+    public function move($deltaX, $deltaY) : Vector
     {
         return new self($this->x + $deltaX, $this->y + $deltaY);
     }
@@ -105,7 +101,7 @@ class Vector
      * @param float $factor
      * @return Vector
      */
-    public function mult($factor)
+    public function mult($factor) : Vector
     {
         return new self($this->x * $factor, $this->y * $factor);
     }
@@ -115,7 +111,7 @@ class Vector
      * @param Vector $other
      * @return Vector
      */
-    public function add(Vector $other)
+    public function add(Vector $other) : Vector
     {
         return new self($this->x + $other->getX(), $this->y + $other->getY());
     }
@@ -125,7 +121,7 @@ class Vector
      * @param Vector $other
      * @return float
      */
-    public function dot(Vector $other)
+    public function dot(Vector $other) : float
     {
         return $this->x * $other->getX() + $this->y * $other->getY();
     }
@@ -134,7 +130,7 @@ class Vector
      * @param Box $box
      * @return bool
      */
-    public function inside(Box $box)
+    public function inside(Box $box) : bool
     {
         return ($this->x >= $box->getLeft()
             && $this->x <= $box->getRight()
@@ -146,8 +142,16 @@ class Vector
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString() : string
     {
         return sprintf('[%s, %s]', $this->x, $this->y);
+    }
+
+    public function serialize() : string
+    {
+        return json_encode([
+            'x' => $this->x,
+            'y' => $this->y,
+        ]);
     }
 }

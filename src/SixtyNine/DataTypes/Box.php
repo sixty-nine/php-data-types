@@ -2,59 +2,33 @@
 
 namespace SixtyNine\DataTypes;
 
-use JMS\Serializer\Annotation as JMS;
-
 /**
  * An axis-aligned rectangle with collision detection
  */
 class Box
 {
-    /**
-     * @var float
-     * @JMS\Type("float")
-     */
+    /** @var float */
     protected $x;
 
-    /**
-     * @var float
-     * @JMS\Type("float")
-     */
+    /** @var float */
     protected $y;
 
-    /**
-     * @var float
-     * @JMS\Type("float")
-     */
+    /** @var float */
     protected $width;
 
-    /**
-     * @var float
-     * @JMS\Type("float")
-     */
+    /** @var float */
     protected $height;
 
-    /**
-     * @var float
-     * @JMS\Exclude()
-     */
+    /** @var float */
     protected $top;
 
-    /**
-     * @var float
-     * @JMS\Exclude()
-     */
+    /** @var float */
     protected $bottom;
 
-    /**
-     * @var float
-     * @JMS\Exclude()
-     */
+    /** @var float */
     protected $left;
 
-    /**
-     * @var float
-     * @JMS\Exclude()
-     */
+    /** @var float */
     protected $right;
 
     /**
@@ -82,7 +56,7 @@ class Box
      * @param float $height
      * @return Box
      */
-    public static function create($x, $y, $width, $height)
+    public static function create($x, $y, $width, $height) : Box
     {
         return new self($x, $y, $width, $height);
     }
@@ -105,7 +79,7 @@ class Box
      * @param bool $strict If true, boxes "touching" each other are not intersecting, otherwise they are
      * @return boolean True is the boxes collide, false otherwise
      */
-    public function intersects(Box $box, $strict = true)
+    public function intersects(Box $box, $strict = true) : bool
     {
         $comparator = function ($x, $y) {
             return $x < $y;
@@ -120,15 +94,14 @@ class Box
         return $comparator($this->getLeft(), $box->getRight())
             && $comparator($box->getLeft(), $this->getRight())
             && $comparator($this->getTop(), $box->getBottom())
-            && $comparator($box->getTop(), $this->getBottom())
-        ;
+            && $comparator($box->getTop(), $this->getBottom());
     }
 
     /**
      * @param Box $box
      * @return bool
      */
-    public function inside(Box $box)
+    public function inside(Box $box) : bool
     {
         return ($this->getLeft() >= $box->getLeft()
             && $this->getRight() <= $box->getRight()
@@ -142,7 +115,7 @@ class Box
      * @param float $deltaY
      * @return Box
      */
-    public function move($deltaX, $deltaY)
+    public function move($deltaX, $deltaY) : Box
     {
         return new self($this->getX() + $deltaX, $this->getY() + $deltaY, $this->getWidth(), $this->getHeight());
     }
@@ -151,7 +124,7 @@ class Box
      * @param int $increment
      * @return Box
      */
-    public function resize($increment)
+    public function resize($increment) : Box
     {
         return new self(
             $this->getX() - $increment,
@@ -164,7 +137,7 @@ class Box
     /**
      * @return float
      */
-    public function getBottom()
+    public function getBottom() : float
     {
         return $this->bottom;
     }
@@ -172,7 +145,7 @@ class Box
     /**
      * @return float
      */
-    public function getHeight()
+    public function getHeight() : float
     {
         return $this->height;
     }
@@ -180,7 +153,7 @@ class Box
     /**
      * @return float
      */
-    public function getLeft()
+    public function getLeft() : float
     {
         return $this->left;
     }
@@ -188,7 +161,7 @@ class Box
     /**
      * @return float
      */
-    public function getRight()
+    public function getRight() : float
     {
         return $this->right;
     }
@@ -196,7 +169,7 @@ class Box
     /**
      * @return float
      */
-    public function getTop()
+    public function getTop() : float
     {
         return $this->top;
     }
@@ -204,7 +177,7 @@ class Box
     /**
      * @return float
      */
-    public function getWidth()
+    public function getWidth() : float
     {
         return $this->width;
     }
@@ -212,7 +185,7 @@ class Box
     /**
      * @return float
      */
-    public function getX()
+    public function getX() : float
     {
         return $this->x;
     }
@@ -220,7 +193,7 @@ class Box
     /**
      * @return float
      */
-    public function getY()
+    public function getY() : float
     {
         return $this->y;
     }
@@ -228,7 +201,7 @@ class Box
     /**
      * @return Vector
      */
-    public function getPosition()
+    public function getPosition() : Vector
     {
         return new Vector($this->getX(), $this->getY());
     }
@@ -236,7 +209,7 @@ class Box
     /**
      * @return Vector
      */
-    public function getDimensions()
+    public function getDimensions() : Vector
     {
         return new Vector($this->getWidth(), $this->getHeight());
     }
@@ -244,7 +217,7 @@ class Box
     /**
      * @return Vector
      */
-    public function getCenter()
+    public function getCenter() : Vector
     {
         return new Vector(
             $this->x + $this->width / 2,
@@ -255,9 +228,18 @@ class Box
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString() : string
     {
         return sprintf('[%s, %s] x [%s, %s]', $this->x, $this->y, $this->width, $this->height);
     }
-}
 
+    public function serialize(): string
+    {
+        return json_encode([
+            'x' => $this->x,
+            'y' => $this->y,
+            'width' => $this->width,
+            'height' => $this->height,
+        ]);
+    }
+}

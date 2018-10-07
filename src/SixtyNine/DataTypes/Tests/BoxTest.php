@@ -2,7 +2,6 @@
 
 namespace SixtyNine\DataTypes\Tests;
 
-use JMS\Serializer\SerializerBuilder;
 use PHPUnit\Framework\TestCase;
 use SixtyNine\DataTypes\Box;
 use SixtyNine\DataTypes\Vector;
@@ -40,17 +39,22 @@ class BoxTest extends TestCase
 
     public function testMove()
     {
-        $box = Box::create(1, 2, 3, 4)->move(10, 20);
+        $original = Box::create(1, 2, 3, 4);
+        $box = $original->move(10, 20);
         $this->assertEquals(Box::create(11, 22, 3, 4), $box);
+        $this->assertNotSame($original, $box);
     }
 
     public function testResize()
     {
-        $box = Box::create(1, 2, 3, 4)->resize(1);
+        $original = Box::create(1, 2, 3, 4);
+        $box = $original->resize(1);
         $this->assertEquals(Box::create(0, 1, 5, 6), $box);
+        $this->assertNotSame($original, $box);
 
-        $box = Box::create(1, 2, 3, 4)->resize(-1);
+        $box = $original->resize(-1);
         $this->assertEquals(Box::create(2, 3, 1, 2), $box);
+        $this->assertNotSame($original, $box);
     }
 
     /**
@@ -107,10 +111,7 @@ class BoxTest extends TestCase
 
     public function testSerialize()
     {
-        $data = SerializerBuilder::create()
-            ->build()
-            ->serialize(Box::create(123, 321, 111, 222), 'json')
-        ;
+        $data = Box::create(123, 321, 111, 222)->serialize();
         $this->assertEquals('{"x":123,"y":321,"width":111,"height":222}', $data);
     }
 }

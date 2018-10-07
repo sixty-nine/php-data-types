@@ -2,7 +2,6 @@
 
 namespace SixtyNine\DataTypes\Tests;
 
-use JMS\Serializer\SerializerBuilder;
 use PHPUnit\Framework\TestCase;
 use SixtyNine\DataTypes\Box;
 use SixtyNine\DataTypes\Vector;
@@ -92,10 +91,7 @@ class VectorTest extends TestCase
 
     public function testSerialize()
     {
-        $data = SerializerBuilder::create()
-            ->build()
-            ->serialize(Vector::create(123, 321), 'json')
-        ;
+        $data = Vector::create(123, 321)->serialize();
         $this->assertEquals('{"x":123,"y":321}', $data);
     }
 
