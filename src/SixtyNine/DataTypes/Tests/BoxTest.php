@@ -3,10 +3,11 @@
 namespace SixtyNine\DataTypes\Tests;
 
 use JMS\Serializer\SerializerBuilder;
+use PHPUnit\Framework\TestCase;
 use SixtyNine\DataTypes\Box;
 use SixtyNine\DataTypes\Vector;
 
-class BoxTest extends \PHPUnit_Framework_TestCase
+class BoxTest extends TestCase
 {
     public function testConstructor()
     {
@@ -66,6 +67,9 @@ class BoxTest extends \PHPUnit_Framework_TestCase
         if (!$collide && $shouldCollide) {
             $this->fail('Collision expected');
         }
+
+        // Make phpunit strict mode happy
+        $this->assertTrue(true);
     }
 
     /**

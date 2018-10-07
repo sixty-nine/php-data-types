@@ -3,10 +3,11 @@
 namespace SixtyNine\DataTypes\Tests;
 
 use JMS\Serializer\SerializerBuilder;
+use PHPUnit\Framework\TestCase;
 use SixtyNine\DataTypes\Box;
 use SixtyNine\DataTypes\Vector;
 
-class VectorTest extends \PHPUnit_Framework_TestCase
+class VectorTest extends TestCase
 {
     public function testConstructor()
     {

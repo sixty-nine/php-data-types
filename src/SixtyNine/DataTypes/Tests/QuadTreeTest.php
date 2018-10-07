@@ -2,10 +2,11 @@
 
 namespace SixtyNine\DataTypes\Tests;
 
+use PHPUnit\Framework\TestCase;
 use SixtyNine\DataTypes\Box;
 use SixtyNine\DataTypes\QuadTree;
 
-class QuadTreeTest extends \PHPUnit_Framework_TestCase
+class QuadTreeTest extends TestCase
 {
     public function testConstructor()
     {
