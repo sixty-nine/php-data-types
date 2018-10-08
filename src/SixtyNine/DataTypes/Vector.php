@@ -130,13 +130,15 @@ class Vector
      * @param Box $box
      * @return bool
      */
-    public function inside(Box $box) : bool
+    public function inside(Box $box, $strict = false) : bool
     {
-        return ($this->x >= $box->getLeft()
-            && $this->x <= $box->getRight()
-            && $this->y >= $box->getTop()
-            && $this->y <= $box->getBottom()
-        );
+        $class = Comparators::class;
+        $comparator = $strict ? array($class, 'strictComparator') : array($class, 'nonStrictComparator');
+
+        return $comparator($box->getLeft(), $this->x)
+            && $comparator($this->x, $box->getRight())
+            && $comparator($box->getTop(), $this->y)
+            && $comparator($this->y, $box->getBottom());
     }
 
     /**

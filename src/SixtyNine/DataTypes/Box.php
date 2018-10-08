@@ -81,15 +81,8 @@ class Box
      */
     public function intersects(Box $box, $strict = true) : bool
     {
-        $comparator = function ($x, $y) {
-            return $x < $y;
-        };
-
-        if (!$strict) {
-            $comparator = function ($x, $y) {
-                return $x <= $y;
-            };
-        }
+        $class = Comparators::class;
+        $comparator = $strict ? array($class, 'strictComparator') : array($class, 'nonStrictComparator');
 
         return $comparator($this->getLeft(), $box->getRight())
             && $comparator($box->getLeft(), $this->getRight())
@@ -99,15 +92,18 @@ class Box
 
     /**
      * @param Box $box
+     * @param bool $strict
      * @return bool
      */
-    public function inside(Box $box) : bool
+    public function inside(Box $box, $strict = false) : bool
     {
-        return ($this->getLeft() >= $box->getLeft()
-            && $this->getRight() <= $box->getRight()
-            && $this->getTop() >= $box->getTop()
-            && $this->getBottom() <= $box->getBottom()
-        );
+        $class = Comparators::class;
+        $comparator = $strict ? array($class, 'strictComparator') : array($class, 'nonStrictComparator');
+
+        return $comparator($box->getLeft(), $this->getLeft())
+            && $comparator($this->getRight(), $box->getRight())
+            && $comparator($box->getTop(), $this->getTop())
+            && $comparator($this->getBottom(), $box->getBottom());
     }
 
     /**

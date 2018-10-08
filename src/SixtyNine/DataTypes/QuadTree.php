@@ -216,7 +216,6 @@ class QuadTree
         }
 
         if ($this->isSplit) {
-
             $index = $this->getIndex($box);
             $nodes = (-1 === $index) ? $this->nodes : array($this->nodes[$index]);
             /** @var QuadTree $node */

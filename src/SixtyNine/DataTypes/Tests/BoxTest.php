@@ -93,9 +93,9 @@ class BoxTest extends TestCase
     /**
      * @dataProvider insideBoxesProvider
      */
-    public function testInside(Box $b1, Box $b2, $shouldBeInside)
+    public function testInside(Box $b1, Box $b2, $shouldBeInside, $strict = false)
     {
-        $this->assertTrue($shouldBeInside === $b2->inside($b1));
+        $this->assertTrue($shouldBeInside === $b2->inside($b1, $strict));
     }
 
     /**
@@ -104,8 +104,12 @@ class BoxTest extends TestCase
     public function insideBoxesProvider()
     {
         return array(
+            array(Box::create(10, 10, 10, 10), Box::create(10, 10, 10, 10), true),
             array(Box::create(10, 10, 10, 10), Box::create(15, 15, 2, 2), true),
             array(Box::create(15, 15, 2, 2), Box::create(10, 10, 10, 10), false),
+            array(Box::create(10, 10, 10, 10), Box::create(10, 10, 10, 10), false, true),
+            array(Box::create(10, 10, 10, 10), Box::create(15, 15, 2, 2), true, true),
+            array(Box::create(15, 15, 2, 2), Box::create(10, 10, 10, 10), false, true),
         );
     }
 
