@@ -2,6 +2,11 @@
 
 namespace SixtyNine\DataTypes;
 
+/**
+ * Class Vector
+ * @package SixtyNine\DataTypes
+ * @SuppressWarnings(PHPMD.ShortVariable)
+ */
 class Vector
 {
     /**
@@ -128,7 +133,9 @@ class Vector
 
     /**
      * @param Box $box
+     * @param bool $strict
      * @return bool
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function inside(Box $box, $strict = false) : bool
     {

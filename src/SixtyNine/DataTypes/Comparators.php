@@ -2,6 +2,11 @@
 
 namespace SixtyNine\DataTypes;
 
+/**
+ * Class Comparators
+ * @package SixtyNine\DataTypes
+ * @SuppressWarnings(PHPMD.ShortVariable)
+ */
 class Comparators
 {
     /**

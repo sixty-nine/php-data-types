@@ -21,9 +21,17 @@
     },
     "require-dev": {
         "phpunit/phpunit": "~6.0",
+        "friendsofphp/php-cs-fixer": "^2.10",
+        "phpmd/phpmd" : "@stable",
         "webmozart/assert": "^1.2"
     },
     "config": {
         "bin-dir": "bin"
+    },
+    "scripts": {
+        "lint": "bin/php-cs-fixer fix src/ --rules=@PSR2 --dry-run",
+        "lint:fix": "php-cs-fixer fix src/ --rules=@PSR2",
+        "mess": "bin/phpmd src/ text ./phpmd.xml",
+        "test": "bin/phpunit -c tests"
     }
 }

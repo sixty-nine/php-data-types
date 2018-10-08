@@ -41,6 +41,7 @@ class QuadTree
         $this->bounds = $bounds;
     }
 
+    /** @SuppressWarnings(PHPMD.ShortVariable) */
     public function split()
     {
         $this->isSplit = true;

@@ -4,6 +4,8 @@ namespace SixtyNine\DataTypes;
 
 /**
  * An axis-aligned rectangle with collision detection
+ * @package SixtyNine\DataTypes
+ * @SuppressWarnings(PHPMD.ShortVariable)
  */
 class Box
 {
@@ -78,6 +80,7 @@ class Box
      * @param Box $box The other rectangle to test collision with
      * @param bool $strict If true, boxes "touching" each other are not intersecting, otherwise they are
      * @return boolean True is the boxes collide, false otherwise
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function intersects(Box $box, $strict = true) : bool
     {
@@ -94,6 +97,7 @@ class Box
      * @param Box $box
      * @param bool $strict
      * @return bool
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function inside(Box $box, $strict = false) : bool
     {
