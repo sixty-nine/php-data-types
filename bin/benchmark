@@ -1,0 +1,137 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use SixtyNine\DataTypes\Box;
+use SixtyNine\DataTypes\Mask\MaskInterface;
+use SixtyNine\DataTypes\Mask\BoxList;
+use SixtyNine\DataTypes\Mask\QuadTree;
+use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\Stopwatch\StopwatchEvent;
+use Webmozart\Assert\Assert;
+
+function output($msg = '') {
+    echo PHP_EOL . $msg;
+};
+
+$b = new Benchmark();
+$b->testInsertRetrive();
+
+class Benchmark
+{
+    protected function insertBoxes(MaskInterface $c, array $boxes)
+    {
+        foreach ($boxes as $b) {
+            $c->insert($b);
+        }
+
+        Assert::count($boxes, $c->count());
+    }
+
+    protected function collides(MaskInterface $c, array $boxes)
+    {
+        foreach ($boxes as $b) {
+            Assert::true($c->collides($b));
+        }
+    }
+
+    public function intersecting(MaskInterface $c, array $boxes)
+    {
+        foreach ($boxes as $b) {
+            $res = $c->getIntersecting($b);
+            Assert::notEmpty($res);
+            Assert::oneOf($b, $res);
+        }
+    }
+
+    public function testInsertRetrive()
+    {
+        $boxesList = [
+            $this->createBoxes(),
+            $this->createRandomBoxes(500),
+        ];
+
+        $titles = new  \ArrayIterator(['Aligned boxes', 'Random boxes']);
+
+        foreach ($boxesList as $boxes) {
+            $lists = [
+                new BoxList(),
+                new QuadTree(Box::create(-1000, -1000, 2000, 2000))
+            ];
+
+            output($titles->current());
+            output(str_repeat('=', strlen($titles->current())));
+            $titles->next();
+
+            $stopwatch = new Stopwatch();
+
+            foreach ($lists as $list) {
+                $class = get_class($list);
+                $stopwatch->start($class);
+
+
+                $this->insertBoxes($list, $boxes);
+                $stopwatch->lap($class);
+
+                $this->collides($list, $boxes);
+                $stopwatch->lap($class);
+
+                $this->intersecting($list, $boxes);
+                $event = $stopwatch->stop($class);
+                $this->dumpStopwatch($class, $event);
+            }
+        }
+
+        output(PHP_EOL);
+    }
+
+    protected function dumpStopwatch($title, StopwatchEvent $event)
+    {
+        $periodTitles = ['Insertion', 'Check collision', 'Get collisions'];
+
+        output();
+        output($title);
+        output(str_repeat('-', strlen($title)));
+
+        $counter = 0;
+        foreach ($event->getPeriods() as $period) {
+            output(sprintf('%s: %s ms', $periodTitles[$counter++], $period->getDuration()));
+        }
+        output(sprintf('Total: %s ms', $event->getDuration()));
+        output();
+    }
+
+    protected function createBoxes()
+    {
+        $boxes = [];
+        $hCount = 25;
+        $vCount = 20;
+        $hInc = 20;
+        $vInc = 10;
+
+        for ($i = 0; $i < $hCount; $i++) {
+            for ($j = 0; $j < $vCount; $j++) {
+                $boxes[] = Box::create($i * $hInc, $j * $vInc, $hInc, $vInc);
+            }
+        }
+
+        return $boxes;
+    }
+
+    protected function createRandomBoxes($count = 100)
+    {
+        $boxes = [];
+
+        for ($i = 0; $i < $count; $i++) {
+            $boxes[] = Box::create(
+                random_int(0, 750),
+                random_int(0, 750),
+                random_int(10, 100),
+                random_int(10, 100)
+            );
+        }
+
+        return $boxes;
+    }
+}

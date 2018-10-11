@@ -75,6 +75,24 @@ class Box
     }
 
     /**
+     * @param Box $box
+     * @return null|Box
+     */
+    public function intersection(Box $box) : ?Box
+    {
+        $leftX = max($this->getX(), $box->getX());
+        $rightX = min($this->getX() + $this->getWidth(), $box->getX() + $box->getWidth());
+        $topY = max($this->getY(), $box->getY());
+        $bottomY = min($this->getY() + $this->getHeight(), $box->getY() + $box->getHeight());
+
+        if ($leftX >= $rightX || $topY >= $bottomY) {
+            return null;
+        }
+
+        return new Box($leftX, $topY, $rightX - $leftX, $bottomY - $topY);
+    }
+
+    /**
      * Detect box collision
      * This algorithm only works with Axis-Aligned boxes!
      * @param Box $box The other rectangle to test collision with

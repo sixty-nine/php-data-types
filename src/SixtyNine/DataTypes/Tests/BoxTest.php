@@ -118,4 +118,16 @@ class BoxTest extends TestCase
         $data = Box::create(123, 321, 111, 222)->serialize();
         $this->assertEquals('{"x":123,"y":321,"width":111,"height":222}', $data);
     }
+
+    public function testIntersection()
+    {
+        $b1 = Box::create(0, 0, 10, 10);
+        $b2 = Box::create(5, 5, 10, 10);
+        $b3 = Box::create(10, 10, 10, 10);
+
+        $this->assertEquals(Box::create(5, 5, 5, 5), $b1->intersection($b2));
+        $this->assertEquals(Box::create(5, 5, 5, 5), $b2->intersection($b1));
+        $this->assertNull($b1->intersection($b3));
+        $this->assertEquals(Box::create(10, 10, 5, 5), $b2->intersection($b3));
+    }
 }

@@ -1,10 +1,16 @@
 <?php
 
-namespace SixtyNine\DataTypes;
+namespace SixtyNine\DataTypes\Mask;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use SixtyNine\DataTypes\Box;
 
-class QuadTree
+/**
+ * Class QuadTree
+ * @package SixtyNine\DataTypes\Mask
+ * @SuppressWarnings(PHPMD.ShortVariable)
+ */
+class QuadTree implements MaskInterface
 {
     const Q_TOP_LEFT = 0;
     const Q_TOP_RIGHT = 1;
@@ -179,7 +185,7 @@ class QuadTree
      * @param Box $box
      * @return array
      */
-    public function retrieve(Box $box)
+    public function getIntersecting(Box $box)
     {
         $return = array();
 
@@ -197,7 +203,7 @@ class QuadTree
         if ($this->isSplit) {
             /** @var QuadTree $node */
             foreach ($this->nodes as $node) {
-                $return = array_merge($return, $node->retrieve($box));
+                $return = array_merge($return, $node->getIntersecting($box));
             }
         }
 
@@ -260,7 +266,7 @@ class QuadTree
     /**
      * @return array
      */
-    public function getAllObjects()
+    public function all()
     {
         $return = array();
 
@@ -269,7 +275,7 @@ class QuadTree
         if ($this->isSplit) {
             /** @var QuadTree $node */
             foreach ($this->nodes as $node) {
-                $return = array_merge($return, $node->getAllObjects());
+                $return = array_merge($return, $node->all());
             }
         }
 

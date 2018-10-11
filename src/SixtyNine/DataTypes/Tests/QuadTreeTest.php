@@ -4,7 +4,7 @@ namespace SixtyNine\DataTypes\Tests;
 
 use PHPUnit\Framework\TestCase;
 use SixtyNine\DataTypes\Box;
-use SixtyNine\DataTypes\QuadTree;
+use SixtyNine\DataTypes\Mask\QuadTree;
 
 class QuadTreeTest extends TestCase
 {
@@ -99,7 +99,7 @@ class QuadTreeTest extends TestCase
             }
         }
 
-        $nodes = $tree->retrieve(new Box(5, 5, 10, 10));
+        $nodes = $tree->getIntersecting(new Box(5, 5, 10, 10));
         $expectedNodes = array(
             new Box(0, 0, 10, 10),
             new Box(10, 0, 10, 10),
@@ -119,8 +119,8 @@ class QuadTreeTest extends TestCase
         $bounds = new Box(0, 0, 100, 100);
         $tree = new QuadTree($bounds);
         $this->fillTreeWithRandomBoxes($tree, $count);
-        $this->assertEquals($count, count($tree->retrieve($bounds)));
-        $this->assertEquals($tree->getAllObjects(), $tree->retrieve($bounds));
+        $this->assertEquals($count, count($tree->getIntersecting($bounds)));
+        $this->assertEquals($tree->all(), $tree->getIntersecting($bounds));
     }
 
     public function testCollides()
@@ -172,7 +172,7 @@ class QuadTreeTest extends TestCase
         $bounds = new Box(0, 0, 10000, 10000);
         $tree = new QuadTree($bounds);
         $this->fillTreeWithRandomBoxes($tree, 1000);
-        $this->assertCount(1000, $tree->getAllObjects());
+        $this->assertCount(1000, $tree->all());
     }
 
     /**

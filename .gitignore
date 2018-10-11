@@ -1,5 +1,6 @@
 vendor/
 bin/*
+!bin/benchmark
 tests/coverage/*
 .php_cs.cache
 
