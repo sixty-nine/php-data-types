@@ -4,9 +4,10 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use SixtyNine\DataTypes\Box;
+use SixtyNine\DataTypes\Colliders\BoxCollider;
 use SixtyNine\DataTypes\Mask\MaskInterface;
-use SixtyNine\DataTypes\Mask\BoxList;
-use SixtyNine\DataTypes\Mask\QuadTree;
+use SixtyNine\DataTypes\Mask\ListMask;
+use SixtyNine\DataTypes\Mask\QuadTreeMask;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
 use Webmozart\Assert\Assert;
@@ -39,7 +40,7 @@ class Benchmark
     public function intersecting(MaskInterface $c, array $boxes)
     {
         foreach ($boxes as $b) {
-            $res = $c->getIntersecting($b);
+            $res = $c->getCollisions($b);
             Assert::notEmpty($res);
             Assert::oneOf($b, $res);
         }
@@ -56,8 +57,8 @@ class Benchmark
 
         foreach ($boxesList as $boxes) {
             $lists = [
-                new BoxList(),
-                new QuadTree(Box::create(-1000, -1000, 2000, 2000))
+                new ListMask(),
+                new QuadTreeMask(Box::create(-1000, -1000, 2000, 2000))
             ];
 
             output($titles->current());
@@ -112,7 +113,7 @@ class Benchmark
 
         for ($i = 0; $i < $hCount; $i++) {
             for ($j = 0; $j < $vCount; $j++) {
-                $boxes[] = Box::create($i * $hInc, $j * $vInc, $hInc, $vInc);
+                $boxes[] = new BoxCollider(Box::create($i * $hInc, $j * $vInc, $hInc, $vInc));
             }
         }
 
@@ -124,12 +125,12 @@ class Benchmark
         $boxes = [];
 
         for ($i = 0; $i < $count; $i++) {
-            $boxes[] = Box::create(
+            $boxes[] = new BoxCollider(Box::create(
                 random_int(0, 750),
                 random_int(0, 750),
                 random_int(10, 100),
                 random_int(10, 100)
-            );
+            ));
         }
 
         return $boxes;

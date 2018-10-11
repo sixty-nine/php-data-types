@@ -1,16 +1,15 @@
 <?php
 
-namespace SixtyNine\DataTypes\Mask;
+namespace SixtyNine\DataTypes;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use SixtyNine\DataTypes\Box;
 
 /**
  * Class QuadTree
- * @package SixtyNine\DataTypes\Mask
+ * @package SixtyNine\DataTypes
  * @SuppressWarnings(PHPMD.ShortVariable)
  */
-class QuadTree implements MaskInterface
+class QuadTree
 {
     const Q_TOP_LEFT = 0;
     const Q_TOP_RIGHT = 1;
@@ -69,7 +68,7 @@ class QuadTree implements MaskInterface
      * @param Box $box
      * @return bool
      */
-    protected function isInTopQuadrant(Box $box)
+    protected function isInTopQuadrant(Box $box) : bool
     {
         $hMidpoint = $this->bounds->getCenter()->getY();
         return $box->getY() <= $hMidpoint && $box->getY() + $box->getHeight() <= $hMidpoint;
@@ -79,7 +78,7 @@ class QuadTree implements MaskInterface
      * @param Box $box
      * @return bool
      */
-    protected function isInBottomQuadrant(Box $box)
+    protected function isInBottomQuadrant(Box $box) : bool
     {
         $hMidpoint = $this->bounds->getCenter()->getY();
         return $box->getY() >= $hMidpoint;
@@ -89,7 +88,7 @@ class QuadTree implements MaskInterface
      * @param Box $box
      * @return bool
      */
-    protected function isInLeftQuadrant(Box $box)
+    protected function isInLeftQuadrant(Box $box) : bool
     {
         $vMidpoint = $this->bounds->getCenter()->getX();
         return $box->getX() <= $vMidpoint && $box->getX() + $box->getWidth() <= $vMidpoint;
@@ -99,7 +98,7 @@ class QuadTree implements MaskInterface
      * @param Box $box
      * @return bool
      */
-    protected function isInRightQuadrant(Box $box)
+    protected function isInRightQuadrant(Box $box) : bool
     {
         $vMidpoint = $this->bounds->getCenter()->getX();
         return $box->getX() >= $vMidpoint;
@@ -109,7 +108,7 @@ class QuadTree implements MaskInterface
      * @param Box $box
      * @return int
      */
-    public function getIndex(Box $box)
+    public function getIndex(Box $box) : int
     {
         $topQuadrant = $this->isInTopQuadrant($box);
         $bottomQuadrant = $this->isInBottomQuadrant($box);
@@ -167,7 +166,7 @@ class QuadTree implements MaskInterface
     /**
      * @return int
      */
-    public function count()
+    public function count() : int
     {
         $count = $this->objects->count();
 
@@ -185,7 +184,7 @@ class QuadTree implements MaskInterface
      * @param Box $box
      * @return array
      */
-    public function getIntersecting(Box $box)
+    public function getCollisions(Box $box) : array
     {
         $return = array();
 
@@ -203,7 +202,7 @@ class QuadTree implements MaskInterface
         if ($this->isSplit) {
             /** @var QuadTree $node */
             foreach ($this->nodes as $node) {
-                $return = array_merge($return, $node->getIntersecting($box));
+                $return = array_merge($return, $node->getCollisions($box));
             }
         }
 
@@ -214,7 +213,7 @@ class QuadTree implements MaskInterface
      * @param Box $box
      * @return bool
      */
-    public function collides(Box $box)
+    public function collides(Box $box) : bool
     {
         foreach ($this->objects as $object) {
             if ($box->intersects($object)) {
@@ -240,7 +239,7 @@ class QuadTree implements MaskInterface
      * @return string
      * @codeCoverageIgnore
      */
-    public function __toString()
+    public function __toString() : string
     {
         $padding = str_repeat('> ', $this->level);
         $res = sprintf(
@@ -266,7 +265,7 @@ class QuadTree implements MaskInterface
     /**
      * @return array
      */
-    public function all()
+    public function all() : array
     {
         $return = array();
 
@@ -285,7 +284,7 @@ class QuadTree implements MaskInterface
     /**
      * @return Box
      */
-    public function getBounds()
+    public function getBounds() : Box
     {
         return $this->bounds;
     }

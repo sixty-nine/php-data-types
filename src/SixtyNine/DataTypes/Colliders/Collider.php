@@ -10,13 +10,13 @@ use SixtyNine\DataTypes\Box;
  * @package SixtyNine\DataTypes\Colliders
  * @SuppressWarnings(PHPMD.ShortVariable)
  */
-abstract class Collider
+abstract class Collider implements ColliderInterface
 {
     abstract public function getBoundingBox() : Box;
 
     abstract public function collidesWithPoint(Vector $p) : bool;
 
-    public function collidesWithColLider(Collider $collider): bool
+    public function collidesWithCollider(ColliderInterface $collider): bool
     {
         $ibb = $this->getBoundingBox()->intersection($collider->getBoundingBox());
 

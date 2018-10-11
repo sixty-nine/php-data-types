@@ -3,30 +3,34 @@
 namespace SixtyNine\DataTypes\Mask;
 
 use SixtyNine\DataTypes\Box;
+use SixtyNine\DataTypes\Colliders\ColliderInterface;
 
 interface MaskInterface
 {
     /**
      * @param Box $box
-     * @return BoxList
+     * @return MaskInterface
      */
-    public function insert(Box $box);
+    public function insert(ColliderInterface $collider) : MaskInterface;
 
     /** @return int */
-    public function count();
+    public function count() : int;
 
     /** @return array */
-    public function all();
+    public function all() : array;
+
+    /** @return Box */
+    public function getBounds() : Box;
 
     /**
      * @param Box $box
      * @return array
      */
-    public function getIntersecting(Box $box);
+    public function getCollisions(ColliderInterface $collider) : array;
 
     /**
      * @param Box $box
      * @return bool
      */
-    public function collides(Box $box);
+    public function collides(ColliderInterface $collider) : bool;
 }
