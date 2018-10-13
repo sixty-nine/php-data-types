@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use SixtyNine\DataTypes\Box;
 use SixtyNine\DataTypes\Colliders\BoxCollider;
 use SixtyNine\DataTypes\Colliders\CircleCollider;
+use SixtyNine\DataTypes\Colliders\CompoundCollider;
 use SixtyNine\DataTypes\Colliders\PixelCollider;
 use SixtyNine\DataTypes\Bitmap;
 use SixtyNine\DataTypes\Vector;
@@ -73,5 +74,22 @@ class ColliderTest extends TestCase
 
         $this->assertFalse($p->collidesWithColLider($b1));
         $this->assertTrue($p->collidesWithColLider($b2));
+    }
+
+    public function testCompoundCollider()
+    {
+
+        $b1 = new BoxCollider(Box::create(0, 0, 1, 1));
+        $b2 = new BoxCollider(Box::create(2, 2, 1, 1));
+        $b3 = new BoxCollider(Box::create(2, 0, 1, 1));
+        $b4 = new BoxCollider(Box::create(0, 2, 1, 1));
+        $c1 = new CompoundCollider([$b1, $b2]);
+        $c2 = new CompoundCollider([$b3, $b4]);
+
+        $this->assertFalse($b1->collidesWithCollider($b3));
+        $this->assertFalse($b1->collidesWithCollider($b4));
+        $this->assertFalse($b2->collidesWithCollider($b3));
+        $this->assertFalse($b2->collidesWithCollider($b4));
+        $this->assertFalse($c1->collidesWithCollider($c2));
     }
 }

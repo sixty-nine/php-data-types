@@ -5,10 +5,19 @@ namespace SixtyNine\DataTypes\Colliders;
 use SixtyNine\DataTypes\Box;
 use SixtyNine\DataTypes\Vector;
 
-class CompoundCollider implements ColliderInterface
+class CompoundCollider extends Collider
 {
     /** @var array */
     protected $children = [];
+
+    public function __construct(array $colliders = [])
+    {
+        foreach ($colliders as $collider) {
+            if ($collider instanceof ColliderInterface) {
+                $this->addCollider($collider);
+            }
+        }
+    }
 
     public function addCollider(ColliderInterface $collider)
     {
@@ -45,9 +54,9 @@ class CompoundCollider implements ColliderInterface
 
     public function collidesWithCollider(ColliderInterface $collider): bool
     {
-        /** @var ColliderInterface $collider */
-        foreach ($this->children as $collider) {
-            if ($collider->collidesWithCollider($collider)) {
+        /** @var ColliderInterface $c */
+        foreach ($this->children as $c) {
+            if ($c->collidesWithCollider($collider)) {
                 return true;
             }
         }
