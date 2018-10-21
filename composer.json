@@ -30,7 +30,7 @@
         "bin-dir": "bin"
     },
     "scripts": {
-        "lint": "bin/php-cs-fixer fix src/ --rules=@PSR2 --dry-run",
+        "lint": "bin/php-cs-fixer fix src/ --rules=@PSR2 --diff --ansi --dry-run",
         "lint:fix": "php-cs-fixer fix src/ --rules=@PSR2",
         "mess": "bin/phpmd src/ text ./phpmd.xml",
         "test": "bin/phpunit -c tests"
