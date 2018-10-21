@@ -78,7 +78,6 @@ class ColliderTest extends TestCase
 
     public function testCompoundCollider()
     {
-
         $b1 = new BoxCollider(Box::create(0, 0, 1, 1));
         $b2 = new BoxCollider(Box::create(2, 2, 1, 1));
         $b3 = new BoxCollider(Box::create(2, 0, 1, 1));
